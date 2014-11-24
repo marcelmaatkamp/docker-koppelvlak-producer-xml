@@ -22,14 +22,14 @@ with Connection('amqp://guest:guest@rabbitmq:5672//') as connection:
   with Producer(channel, exchange = exchange, serializer="json") as producer:
     while True:
       for dirpath, dirnames, files in os.walk(topdir):
+        path = dirpath.split('/')
         for name in files:
           if name.lower().endswith(exten):
             filename = os.path.join(dirpath, name)
-            file = io.open( filename, "r", encoding="utf-16-le" )
+            print len(path)*'-', filename
+            file = io.open( filename, "r", encoding="iso-8859-1" )
             data = file.read()[2:]
             headers = {"path": dirpath, "name": name}
-            # print "file: ",dirpath,name,data
-            print "."
             producer.publish(
               data,
               headers=headers,
@@ -38,4 +38,3 @@ with Connection('amqp://guest:guest@rabbitmq:5672//') as connection:
               serializer='json'
             )
             os.remove(filename)
-
