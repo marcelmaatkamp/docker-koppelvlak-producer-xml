@@ -35,6 +35,7 @@ with Connection('amqp://guest:guest@rabbitmq:5672//') as connection:
               headers=headers,
               exchange=exchange,
               routing_key='orca',
-              serializer='json'
+              content_type="application/xml",
+              content_encoding="binary",
             )
             os.remove(filename)
